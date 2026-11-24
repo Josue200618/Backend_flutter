@@ -1,0 +1,156 @@
+@baseUrl = http://localhost:3000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiY29ycmVvIjoiY2xpZW50ZUBleGFtcGxlLmNvbSIsInJvbF9pZCI6Mywicm9sIjoiY2xpZW50ZSIsImlhdCI6MTc5NTE1NDc5NSwiZXhwIjoxNzk1NzU5NTk1fQ.P5HtTTdQNL5y7KVdDaAhgYUZuzIPOzf9yzYM4Rl3LMY
+
+### Estado de la API
+GET {{baseUrl}}/health
+
+### Crear cuenta de cliente
+POST {{baseUrl}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "Josue Santana",
+  "correo": "jersonsantana1126@gmail.com",
+  "telefono": "3122907786",
+  "password": "jerson123*",
+  "confirmPassword": "jerson123*",
+  "documento": "6220410",
+  "direccion": "Calle 61a Cr 53-51",
+  "tipo": "persona"
+}
+
+### Iniciar sesión
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "cliente@example.com",
+  "password": "cliente123*"
+}
+
+### Consultar el perfil autenticado
+GET {{baseUrl}}/auth/perfil
+Authorization: Bearer {{token}}
+
+### Consultar categorías activas
+GET {{baseUrl}}/categorias
+
+### Consultar el catálogo activo
+GET {{baseUrl}}/productos?page=1&limit=10
+
+### Crear un producto artesanal (administrador u operario autorizado)
+POST {{baseUrl}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "categoria_id": 1,
+  "nombre": "Mesa rústica",
+  "descripcion": "Mesa artesanal de madera",
+  "precio": 350000,
+  "stock": 5,
+  "stock_minimo": 1
+}
+
+### Consultar productos de una categoría
+GET {{baseUrl}}/productos?categoria_id=1
+
+### Consultar mi carrito (requiere una cuenta de cliente)
+GET {{baseUrl}}/carrito
+Authorization: Bearer {{token}}
+
+### Agregar unidades al carrito
+POST {{baseUrl}}/carrito/items
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "producto_id": 1,
+  "cantidad": 1
+}
+
+### Cambiar la cantidad de un producto en el carrito
+PUT {{baseUrl}}/carrito/items/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "cantidad": 2
+}
+
+### Crear un pedido desde el carrito
+POST {{baseUrl}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "direccion_entrega": "Calle 10 # 20-30",
+  "notas": "Entregar en horario de la tarde"
+}
+
+### Consultar mis pedidos (administración ve todos)
+GET {{baseUrl}}/pedidos
+Authorization: Bearer {{token}}
+
+### Aprobar un pedido pendiente
+PUT {{baseUrl}}/pedidos/1/aprobar
+Authorization: Bearer {{token}}
+
+### Entregar un pedido aprobado y generar la venta
+PUT {{baseUrl}}/pedidos/1/entregar
+Authorization: Bearer {{token}}
+
+### Consultar ventas
+GET {{baseUrl}}/ventas?page=1&limit=10
+Authorization: Bearer {{token}}
+
+### Registrar una compra y actualizar inventario
+POST {{baseUrl}}/compras
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "proveedor_id": 1,
+  "detalles": [
+    {
+      "producto_id": 1,
+      "cantidad": 3,
+      "costo_unitario": 120000
+    }
+  ]
+}
+
+### Consultar proveedores
+GET {{baseUrl}}/proveedores
+Authorization: Bearer {{token}}
+
+### Consultar tablero del negocio
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{token}}
+
+### Exportar ventas como JSON, XLSX o PDF
+GET {{baseUrl}}/reportes/ventas?desde=2026-01-01&hasta=2026-12-31&formato=json
+Authorization: Bearer {{token}}
+
+### Consultar auditoría
+GET {{baseUrl}}/auditoria?page=1&limit=20
+Authorization: Bearer {{token}}
+
+### Solicitar recuperación de contraseña
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "correo": "jersonsantana1126@gmail.com"
+}
+
+### Restablecer contraseña con el código recibido por correo
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "correo": "jersonsantana1126@gmail.com",
+  "codigo": "739751",
+  "password": "Josue2006*",
+  "confirmPassword": "Josue2006*"
+}
